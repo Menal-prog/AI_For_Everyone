@@ -9,6 +9,7 @@ export default function InstructorPage() {
   const [profile, setProfile] = useState<any>(null)
   const [submissions, setSubmissions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [openingId, setOpeningId] = useState<string | null>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -42,6 +43,24 @@ export default function InstructorPage() {
 
     load()
   }, [])
+
+  async function handleOpenFile(storagePath: string, submissionId: string) {
+    setOpeningId(submissionId)
+    const supabase = createClient()
+
+    const { data, error } = await supabase.storage
+      .from('submissions')
+      .createSignedUrl(storagePath, 60)
+
+    setOpeningId(null)
+
+    if (error || !data) {
+      alert('Could not open file: ' + (error?.message || 'unknown error'))
+      return
+    }
+
+    window.open(data.signedUrl, '_blank')
+  }
 
   if (loading) {
     return <main className="max-w-4xl mx-auto p-8">Loading...</main>
@@ -81,6 +100,7 @@ export default function InstructorPage() {
               <th className="py-2 pr-4">Task</th>
               <th className="py-2 pr-4">Submitted</th>
               <th className="py-2 pr-4">Grade</th>
+              <th className="py-2 pr-4">File</th>
             </tr>
           </thead>
           <tbody>
@@ -92,6 +112,15 @@ export default function InstructorPage() {
                   {new Date(s.submitted_at).toLocaleDateString()}
                 </td>
                 <td className="py-2 pr-4">{s.grade || '—'}</td>
+                <td className="py-2 pr-4">
+                  <button
+                    onClick={() => handleOpenFile(s.storage_path, s.id)}
+                    disabled={openingId === s.id}
+                    className="bg-black text-white rounded-lg px-3 py-1 text-xs font-semibold disabled:opacity-40"
+                  >
+                    {openingId === s.id ? 'Opening...' : 'Open file'}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
