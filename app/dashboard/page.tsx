@@ -8,6 +8,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState<any>(null)
   const [submissions, setSubmissions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [openingId, setOpeningId] = useState<string | null>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -31,6 +32,24 @@ export default function DashboardPage() {
       setLoading(false)
     }
   }, [])
+
+  async function handleOpenFile(storagePath: string, submissionId: string) {
+    setOpeningId(submissionId)
+    const supabase = createClient()
+
+    const { data, error } = await supabase.storage
+      .from('submissions')
+      .createSignedUrl(storagePath, 60)
+
+    setOpeningId(null)
+
+    if (error || !data) {
+      alert('Could not open file: ' + (error?.message || 'unknown error'))
+      return
+    }
+
+    window.open(data.signedUrl, '_blank')
+  }
 
   if (loading) {
     return <main className="max-w-3xl mx-auto p-8">Loading...</main>
@@ -66,6 +85,13 @@ export default function DashboardPage() {
               </p>
               {s.grade && <p className="text-sm mt-1">Grade: {s.grade}</p>}
               {s.feedback && <p className="text-sm mt-1">Feedback: {s.feedback}</p>}
+              <button
+                onClick={() => handleOpenFile(s.storage_path, s.id)}
+                disabled={openingId === s.id}
+                className="mt-3 text-sm bg-black text-white rounded-lg px-3 py-1.5 font-semibold disabled:opacity-40"
+              >
+                {openingId === s.id ? 'Opening...' : 'Open file'}
+              </button>
             </div>
           ))}
         </div>
