@@ -9,20 +9,28 @@ export default function LoginPage() {
   const [fullName, setFullName] = useState('')
   const [code, setCode] = useState('')
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
   const [verifying, setVerifying] = useState(false)
   const router = useRouter()
 
   async function handleSendCode(e: React.FormEvent) {
     e.preventDefault()
+    if (sending) return
     setError('')
+    setSending(true)
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { data: { full_name: fullName } },
     })
+    setSending(false)
     if (error) {
-      setError(JSON.stringify(error, null, 2))
+      if (error.status === 429) {
+        setError('Please wait a minute before requesting another code.')
+      } else {
+        setError(error.message)
+      }
     } else {
       setSent(true)
     }
@@ -36,14 +44,14 @@ export default function LoginPage() {
 
     const result = await supabase.auth.verifyOtp({
       email,
-      token: code,
+      token: code.trim(),
       type: 'email',
     })
 
     setVerifying(false)
 
     if (result.error) {
-      setError(JSON.stringify(result.error, null, 2))
+      setError('That code did not work. Check the digits or request a new code.')
     } else {
       router.push('/dashboard')
     }
@@ -51,10 +59,11 @@ export default function LoginPage() {
 
   if (sent) {
     return (
-      <main className="max-w-md mx-auto p-8 mt-20">
-        <h1 className="text-2xl font-bold mb-2">Enter your code</h1>
-        <p className="text-gray-600 mb-6">
-          We sent a 6-digit code to <strong>{email}</strong>. Enter it below.
+      <main className="max-w-md mx-auto px-8 py-20">
+        <h1 className="font-display text-3xl font-bold mb-3">Enter your code</h1>
+        <p className="text-slate mb-8">
+          We sent an 8-digit code to <strong className="text-ink">{email}</strong>.
+          Enter it below. Check your spam folder if you don't see it.
         </p>
         <form onSubmit={handleVerifyCode} className="space-y-4">
           <input
@@ -63,20 +72,18 @@ export default function LoginPage() {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="12345678"
-            className="w-full border rounded-lg p-3 text-center text-xl tracking-widest"
+            className="w-full border border-line rounded p-3 text-center text-xl tracking-[0.3em] font-mono bg-white focus:outline-none focus:border-steel"
             maxLength={8}
           />
           <button
             type="submit"
             disabled={verifying}
-            className="w-full bg-black text-white rounded-lg p-3 font-semibold disabled:opacity-40"
+            className="w-full bg-steel text-white rounded p-3 font-semibold hover:bg-ink transition-colors disabled:opacity-40"
           >
             {verifying ? 'Verifying...' : 'Verify and sign in'}
           </button>
           {error && (
-            <pre className="text-red-600 text-xs whitespace-pre-wrap bg-red-50 p-3 rounded">
-              {error}
-            </pre>
+            <p className="text-ochre text-sm border-l-2 border-ochre pl-3">{error}</p>
           )}
         </form>
       </main>
@@ -84,10 +91,14 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="max-w-md mx-auto p-8 mt-20">
-      <h1 className="text-2xl font-bold mb-2">Sign in</h1>
-      <p className="text-gray-600 mb-6">
-        Enter your name and email and we'll send you a 6-digit code. No password needed.
+    <main className="max-w-md mx-auto px-8 py-20">
+      <h1 className="font-display text-3xl font-bold mb-3">Sign in</h1>
+      <p className="text-slate mb-4">
+        Enter your name and email and we'll send you an 8-digit code. No password needed.
+      </p>
+      <p className="text-sm text-ochre border-l-2 border-ochre pl-3 mb-8">
+        Please use a personal email (Gmail, Outlook, Yahoo). University email
+        addresses (@uog.edu.pk) do not receive our codes.
       </p>
       <form onSubmit={handleSendCode} className="space-y-4">
         <input
@@ -96,26 +107,25 @@ export default function LoginPage() {
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           placeholder="Your full name"
-          className="w-full border rounded-lg p-3"
+          className="w-full border border-line rounded p-3 bg-white focus:outline-none focus:border-steel"
         />
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
-          className="w-full border rounded-lg p-3"
+          placeholder="you@gmail.com"
+          className="w-full border border-line rounded p-3 bg-white focus:outline-none focus:border-steel"
         />
         <button
           type="submit"
-          className="w-full bg-black text-white rounded-lg p-3 font-semibold"
+          disabled={sending}
+          className="w-full bg-steel text-white rounded p-3 font-semibold hover:bg-ink transition-colors disabled:opacity-40"
         >
-          Send code
+          {sending ? 'Sending...' : 'Send code'}
         </button>
         {error && (
-          <pre className="text-red-600 text-xs whitespace-pre-wrap bg-red-50 p-3 rounded">
-            {error}
-          </pre>
+          <p className="text-ochre text-sm border-l-2 border-ochre pl-3">{error}</p>
         )}
       </form>
     </main>

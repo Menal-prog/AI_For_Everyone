@@ -98,14 +98,14 @@ export default function InstructorPage() {
   }
 
   if (loading) {
-    return <main className="max-w-4xl mx-auto p-8">Loading...</main>
+    return <main className="max-w-4xl mx-auto px-8 py-20">Loading...</main>
   }
 
   if (!user) {
     return (
-      <main className="max-w-4xl mx-auto p-8 text-center mt-20">
-        <h1 className="text-2xl font-bold mb-4">Not signed in</h1>
-        <Link href="/login" className="text-blue-600 hover:underline">
+      <main className="max-w-4xl mx-auto px-8 py-20 text-center">
+        <h1 className="font-display text-3xl font-bold mb-4">Not signed in</h1>
+        <Link href="/login" className="text-steel hover:underline">
           Go to login
         </Link>
       </main>
@@ -114,37 +114,37 @@ export default function InstructorPage() {
 
   if (profile?.role !== 'instructor') {
     return (
-      <main className="max-w-4xl mx-auto p-8 text-center mt-20">
-        <h1 className="text-2xl font-bold mb-4">Instructors only</h1>
-        <p className="text-gray-600">This page is restricted.</p>
+      <main className="max-w-4xl mx-auto px-8 py-20 text-center">
+        <h1 className="font-display text-3xl font-bold mb-4">Instructors only</h1>
+        <p className="text-slate">This page is restricted.</p>
       </main>
     )
   }
 
   return (
-    <main className="max-w-4xl mx-auto p-8">
-      <h1 className="text-2xl font-bold mb-6">All submissions</h1>
+    <main className="max-w-4xl mx-auto px-8 py-12">
+      <h1 className="font-display text-3xl font-bold mb-8">All submissions</h1>
 
       {submissions.length === 0 ? (
-        <p className="text-gray-500">No submissions yet.</p>
+        <p className="text-slate">No submissions yet.</p>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-5">
           {submissions.map((s: any) => (
-            <div key={s.id} className="border rounded-lg p-4">
+            <div key={s.id} className="border-l-2 border-steel pl-5 py-2">
               <div className="flex items-start justify-between gap-4 mb-3">
                 <div>
-                  <h3 className="font-semibold">
+                  <h3 className="font-display text-lg font-semibold">
                     {s.profiles?.full_name || 'Unnamed'}
                   </h3>
-                  <p className="text-sm text-gray-500">{s.days?.title}</p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-sm text-slate">{s.days?.title}</p>
+                  <p className="text-xs text-slate">
                     Submitted {new Date(s.submitted_at).toLocaleDateString()}
                   </p>
                 </div>
                 <button
                   onClick={() => handleOpenFile(s.storage_path, s.id)}
                   disabled={openingId === s.id}
-                  className="bg-black text-white rounded-lg px-3 py-1.5 text-xs font-semibold disabled:opacity-40 whitespace-nowrap"
+                  className="bg-steel text-white rounded px-3 py-1.5 text-xs font-semibold hover:bg-ink transition-colors disabled:opacity-40 whitespace-nowrap"
                 >
                   {openingId === s.id ? 'Opening...' : 'Open file'}
                 </button>
@@ -152,7 +152,7 @@ export default function InstructorPage() {
 
               <div className="flex flex-wrap gap-3 items-end">
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Grade</label>
+                  <label className="block text-xs text-slate mb-1">Grade</label>
                   <input
                     type="text"
                     value={drafts[s.id]?.grade || ''}
@@ -163,11 +163,11 @@ export default function InstructorPage() {
                       }))
                     }
                     placeholder="e.g. A or 9/10"
-                    className="border rounded-lg p-2 text-sm w-28"
+                    className="border border-line rounded p-2 text-sm w-28 bg-white focus:outline-none focus:border-steel"
                   />
                 </div>
                 <div className="flex-1 min-w-[200px]">
-                  <label className="block text-xs text-gray-500 mb-1">Feedback</label>
+                  <label className="block text-xs text-slate mb-1">Feedback</label>
                   <input
                     type="text"
                     value={drafts[s.id]?.feedback || ''}
@@ -178,13 +178,13 @@ export default function InstructorPage() {
                       }))
                     }
                     placeholder="Optional comment for the student"
-                    className="border rounded-lg p-2 text-sm w-full"
+                    className="border border-line rounded p-2 text-sm w-full bg-white focus:outline-none focus:border-steel"
                   />
                 </div>
                 <button
                   onClick={() => handleSaveGrade(s.id)}
                   disabled={savingId === s.id}
-                  className="border rounded-lg px-3 py-2 text-sm font-semibold hover:bg-gray-100 disabled:opacity-40"
+                  className="border border-line rounded px-3 py-2 text-sm font-semibold hover:border-steel hover:text-steel transition-colors disabled:opacity-40"
                 >
                   {savingId === s.id ? 'Saving...' : 'Save'}
                 </button>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '../lib/supabase'
 import Link from 'next/link'
 
@@ -9,6 +10,7 @@ export default function DashboardPage() {
   const [submissions, setSubmissions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [openingId, setOpeningId] = useState<string | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     const supabase = createClient()
@@ -51,15 +53,21 @@ export default function DashboardPage() {
     window.open(data.signedUrl, '_blank')
   }
 
+  async function handleSignOut() {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
+
   if (loading) {
-    return <main className="max-w-3xl mx-auto p-8">Loading...</main>
+    return <main className="max-w-3xl mx-auto px-8 py-20">Loading...</main>
   }
 
   if (!user) {
     return (
-      <main className="max-w-3xl mx-auto p-8 text-center mt-20">
-        <h1 className="text-2xl font-bold mb-4">Not signed in</h1>
-        <Link href="/login" className="text-blue-600 hover:underline">
+      <main className="max-w-3xl mx-auto px-8 py-20 text-center">
+        <h1 className="font-display text-3xl font-bold mb-4">Not signed in</h1>
+        <Link href="/login" className="text-steel hover:underline">
           Go to login
         </Link>
       </main>
@@ -67,28 +75,47 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="max-w-3xl mx-auto p-8">
-      <h1 className="text-2xl font-bold mb-2">My submissions</h1>
-      <p className="text-gray-600 mb-6">Signed in as {user.email}</p>
+    <main className="max-w-3xl mx-auto px-8 py-12">
+      <div className="flex items-center justify-between mb-8">
+        <Link href="/" className="text-sm text-slate hover:text-steel">
+          Back to course
+        </Link>
+        <button
+          onClick={handleSignOut}
+          className="text-sm border border-line rounded px-3 py-1.5 font-semibold hover:border-steel hover:text-steel transition-colors"
+        >
+          Sign out
+        </button>
+      </div>
+
+      <h1 className="font-display text-3xl font-bold mb-1">My submissions</h1>
+      <p className="text-slate mb-8">Signed in as {user.email}</p>
 
       {submissions.length === 0 ? (
-        <p className="text-gray-500">
+        <p className="text-slate">
           You haven't submitted anything yet. Go to a day's task page to submit your work.
         </p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {submissions.map((s: any) => (
-            <div key={s.id} className="border rounded-lg p-4">
-              <h3 className="font-semibold">{s.days?.title}</h3>
-              <p className="text-sm text-gray-500">
+            <div key={s.id} className="border-l-2 border-steel pl-5 py-1">
+              <h3 className="font-display text-lg font-semibold">{s.days?.title}</h3>
+              <p className="text-sm text-slate">
                 Submitted {new Date(s.submitted_at).toLocaleDateString()}
               </p>
-              {s.grade && <p className="text-sm mt-1">Grade: {s.grade}</p>}
-              {s.feedback && <p className="text-sm mt-1">Feedback: {s.feedback}</p>}
+              {s.grade && (
+                <p className="text-sm mt-2">
+                  <span className="text-slate">Grade: </span>
+                  <span className="text-ochre font-semibold">{s.grade}</span>
+                </p>
+              )}
+              {s.feedback && (
+                <p className="text-sm mt-1 text-slate">{s.feedback}</p>
+              )}
               <button
                 onClick={() => handleOpenFile(s.storage_path, s.id)}
                 disabled={openingId === s.id}
-                className="mt-3 text-sm bg-black text-white rounded-lg px-3 py-1.5 font-semibold disabled:opacity-40"
+                className="mt-3 text-sm bg-steel text-white rounded px-3 py-1.5 font-semibold hover:bg-ink transition-colors disabled:opacity-40"
               >
                 {openingId === s.id ? 'Opening...' : 'Open file'}
               </button>

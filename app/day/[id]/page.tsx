@@ -83,49 +83,52 @@ export default function DayPage({ params }: { params: Promise<{ id: string }> })
   }
 
   if (loading || !day) {
-    return <main className="max-w-3xl mx-auto p-8">Loading...</main>
+    return <main className="max-w-3xl mx-auto px-8 py-20">Loading...</main>
   }
 
   return (
-    <main className="max-w-3xl mx-auto p-8">
-      <Link href={`/week/${day.week_id}`} className="text-sm text-gray-500 hover:underline">
+    <main className="max-w-3xl mx-auto px-8 py-12">
+      <Link href={`/week/${day.week_id}`} className="text-sm text-slate hover:text-steel">
         Back to week
       </Link>
 
-      <h1 className="text-2xl font-bold mt-4 mb-6">
-        Day {day.day_number} - {day.title}
-      </h1>
+      <div className="flex items-baseline gap-4 mt-4 mb-8">
+        <span className="font-display text-4xl font-bold text-steel">
+          {String(day.day_number).padStart(2, '0')}
+        </span>
+        <h1 className="font-display text-2xl font-bold">{day.title}</h1>
+      </div>
 
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 gap-8 mb-10">
         <div>
-          <h3 className="font-semibold text-sm text-gray-500 mb-2">What you will do</h3>
-          <ul className="list-disc pl-5 space-y-1 text-sm">
+          <h3 className="text-sm font-semibold text-slate mb-2">What you will do</h3>
+          <ul className="space-y-1 text-sm">
             {day.activities.map((a: string, i: number) => (
-              <li key={i}>{a}</li>
+              <li key={i} className="pl-3 border-l border-line">{a}</li>
             ))}
           </ul>
         </div>
         <div>
-          <h3 className="font-semibold text-sm text-gray-500 mb-2">What you will learn</h3>
-          <ul className="list-disc pl-5 space-y-1 text-sm">
+          <h3 className="text-sm font-semibold text-slate mb-2">What you will learn</h3>
+          <ul className="space-y-1 text-sm">
             {day.learning_elements.map((e: string, i: number) => (
-              <li key={i}>{e}</li>
+              <li key={i} className="pl-3 border-l border-line">{e}</li>
             ))}
           </ul>
         </div>
       </div>
 
-      <div className="border-l-4 border-orange-400 bg-orange-50 p-4 rounded mb-8">
-        <h3 className="font-semibold text-orange-800 mb-1">Task for the day</h3>
-        <p className="text-sm">{day.task}</p>
+      <div className="border-l-2 border-ochre pl-5 py-2 mb-10">
+        <h3 className="font-display font-semibold mb-1">Task for the day</h3>
+        <p className="text-sm text-ink">{day.task}</p>
       </div>
 
-      <div className="border rounded-lg p-4">
-        <h3 className="font-semibold mb-3">Submit your work</h3>
+      <div className="border border-line rounded p-5">
+        <h3 className="font-display font-semibold mb-3">Submit your work</h3>
 
         {!user && (
-          <p className="text-sm text-gray-600">
-            <Link href="/login" className="text-blue-600 hover:underline">
+          <p className="text-sm text-slate">
+            <Link href="/login" className="text-steel hover:underline">
               Sign in
             </Link>{' '}
             to submit your task.
@@ -133,14 +136,14 @@ export default function DayPage({ params }: { params: Promise<{ id: string }> })
         )}
 
         {user && mySubmission && (
-          <p className="text-sm text-green-700">
+          <p className="text-sm text-steel mb-3">
             Already submitted on {new Date(mySubmission.submitted_at).toLocaleDateString()}.
             Uploading again will replace it.
           </p>
         )}
 
         {user && (
-          <form onSubmit={handleSubmit} className="mt-3 space-y-3">
+          <form onSubmit={handleSubmit} className="space-y-3">
             <input
               type="file"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
@@ -149,11 +152,11 @@ export default function DayPage({ params }: { params: Promise<{ id: string }> })
             <button
               type="submit"
               disabled={!file}
-              className="bg-black text-white rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-40"
+              className="bg-ochre text-white rounded px-4 py-2 text-sm font-semibold hover:bg-ink transition-colors disabled:opacity-40"
             >
               Submit
             </button>
-            {status && <p className="text-sm">{status}</p>}
+            {status && <p className="text-sm text-slate">{status}</p>}
           </form>
         )}
       </div>
