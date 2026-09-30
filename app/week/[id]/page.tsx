@@ -35,32 +35,39 @@ export default async function WeekPage({ params }: { params: Promise<{ id: strin
   const { week, days, materials } = await getWeekData(id)
 
   if (!week) {
-    return <main className="max-w-3xl mx-auto p-8">Week not found.</main>
+    return <main className="max-w-3xl mx-auto px-8 py-20">Week not found.</main>
   }
 
   return (
-    <main className="max-w-3xl mx-auto p-8">
-      <Link href="/" className="text-sm text-gray-500 hover:underline">
+    <main className="max-w-3xl mx-auto px-8 py-12">
+      <Link href="/" className="text-sm text-slate hover:text-steel">
         Back to all weeks
       </Link>
 
-      <h1 className="text-2xl font-bold mt-4">
-        Week {week.number} - {week.title}
-      </h1>
-      <p className="text-gray-600 mb-6">
+      <div className="flex items-baseline gap-4 mt-4 mb-1">
+        <span className="font-display text-4xl font-bold text-steel">
+          {String(week.number).padStart(2, '0')}
+        </span>
+        <h1 className="font-display text-2xl font-bold">{week.title}</h1>
+      </div>
+      <p className="text-slate mb-8">
         {week.theory_hours}h theory, {week.practical_hours}h practical
       </p>
 
-      <div className="border rounded-lg p-4 mb-8 bg-gray-50">
-        <h3 className="font-semibold mb-2">Materials</h3>
+      <div className="border-l-2 border-line pl-5 py-1 mb-10">
+        <h3 className="font-display font-semibold mb-2">Materials</h3>
         {materials.length === 0 && (
-          <p className="text-sm text-gray-500">Not posted yet, check back after class.</p>
+          <p className="text-sm text-slate">Not posted yet, check back after class.</p>
         )}
         {materials.length > 0 && (
           <ul className="space-y-1">
             {materials.map((m: any) => (
               <li key={m.id}>
-                <a href={m.storage_path} target="_blank" className="text-blue-600 hover:underline text-sm">
+                <a
+                  href={m.storage_path}
+                  target="_blank"
+                  className="text-steel hover:underline text-sm"
+                >
                   {m.file_name}
                 </a>
               </li>
@@ -69,11 +76,19 @@ export default async function WeekPage({ params }: { params: Promise<{ id: strin
         )}
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-1">
         {days.map((day: any) => (
-          <Link key={day.id} href={`/day/${day.id}`} className="block border rounded-lg p-4 hover:border-black transition">
-            <span className="text-sm text-gray-500">Day {day.day_number}</span>
-            <h3 className="font-semibold">{day.title}</h3>
+          <Link
+            key={day.id}
+            href={`/day/${day.id}`}
+            className="flex items-baseline gap-5 py-4 border-t border-line hover:border-steel transition-colors group"
+          >
+            <span className="font-display text-xl font-bold text-steel w-8 shrink-0">
+              {String(day.day_number).padStart(2, '0')}
+            </span>
+            <h3 className="font-display font-semibold group-hover:text-steel transition-colors">
+              {day.title}
+            </h3>
           </Link>
         ))}
       </div>

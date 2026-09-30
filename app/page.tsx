@@ -1,6 +1,4 @@
-import { createClient } from './lib/supabase'
 import Link from 'next/link'
-import { createBrowserClient } from '@supabase/ssr'
 
 async function getWeeks() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -22,27 +20,29 @@ export default async function Home() {
   const weeks = await getWeeks()
 
   return (
-    <main className="max-w-3xl mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-2">AI for Everyone</h1>
-      <p className="text-gray-600 mb-8">
+    <main className="max-w-3xl mx-auto px-8 py-12">
+      <h1 className="font-display text-4xl font-bold mb-3">AI for Everyone</h1>
+      <p className="text-slate mb-10">
         A twelve-week course. Click a week to see materials and daily tasks.
       </p>
-      <div className="space-y-3">
+      <div className="space-y-1">
         {weeks.map((week: any) => (
           <Link
             key={week.id}
             href={`/week/${week.id}`}
-            className="block border rounded-lg p-4 hover:border-black transition"
+            className="flex items-baseline gap-5 py-4 border-t border-line hover:border-steel transition-colors group"
           >
-            <div className="flex justify-between items-center">
-              <div>
-                <span className="text-sm text-gray-500">Week {week.number}</span>
-                <h2 className="text-lg font-semibold">{week.title}</h2>
-              </div>
-              <span className="text-sm text-gray-500">
-                {week.theory_hours}h theory · {week.practical_hours}h practical
-              </span>
+            <span className="font-display text-2xl font-bold text-steel w-10 shrink-0">
+              {String(week.number).padStart(2, '0')}
+            </span>
+            <div className="flex-1">
+              <h2 className="font-display text-lg font-semibold group-hover:text-steel transition-colors">
+                {week.title}
+              </h2>
             </div>
+            <span className="text-sm text-slate shrink-0">
+              {week.theory_hours}h theory · {week.practical_hours}h practical
+            </span>
           </Link>
         ))}
       </div>
