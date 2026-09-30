@@ -21,10 +21,35 @@ export default async function Home() {
 
   return (
     <main className="max-w-3xl mx-auto px-8 py-12">
-      <h1 className="font-display text-4xl font-bold mb-3">AI for Everyone</h1>
-      <p className="text-slate mb-10">
-        A twelve-week course. Click a week to see materials and daily tasks.
-      </p>
+      <div className="flex items-center gap-8 mb-10">
+        <svg
+          viewBox="0 0 160 160"
+          className="w-28 h-28 shrink-0"
+          aria-hidden="true"
+        >
+          <g stroke="var(--color-steel)" strokeWidth="1.5" fill="none">
+            <line x1="30" y1="40" x2="80" y2="20" />
+            <line x1="30" y1="40" x2="60" y2="90" />
+            <line x1="80" y1="20" x2="130" y2="55" />
+            <line x1="80" y1="20" x2="60" y2="90" />
+            <line x1="130" y1="55" x2="60" y2="90" />
+            <line x1="60" y1="90" x2="100" y2="130" />
+            <line x1="130" y1="55" x2="100" y2="130" />
+          </g>
+          <circle cx="30" cy="40" r="5" fill="var(--color-steel)" />
+          <circle cx="80" cy="20" r="5" fill="var(--color-steel)" />
+          <circle cx="130" cy="55" r="5" fill="var(--color-steel)" />
+          <circle cx="60" cy="90" r="7" fill="var(--color-ochre)" />
+          <circle cx="100" cy="130" r="5" fill="var(--color-steel)" />
+        </svg>
+        <div>
+          <h1 className="font-display text-4xl font-bold mb-2">AI for Everyone</h1>
+          <p className="text-slate">
+            A twelve-week course. Click a week to see materials and daily tasks.
+          </p>
+        </div>
+      </div>
+
       <div className="space-y-1">
         {weeks.map((week: any) => (
           <Link
