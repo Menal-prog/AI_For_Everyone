@@ -10,6 +10,8 @@ export default function InstructorPage() {
   const [submissions, setSubmissions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [openingId, setOpeningId] = useState<string | null>(null)
+  const [savingId, setSavingId] = useState<string | null>(null)
+  const [drafts, setDrafts] = useState<Record<string, { grade: string; feedback: string }>>({})
 
   useEffect(() => {
     const supabase = createClient()
@@ -36,6 +38,15 @@ export default function InstructorPage() {
           .select('*, days(title, day_number), profiles(full_name)')
           .order('submitted_at', { ascending: false })
         setSubmissions(subs || [])
+
+        const initialDrafts: Record<string, { grade: string; feedback: string }> = {}
+        for (const s of subs || []) {
+          initialDrafts[s.id] = {
+            grade: s.grade || '',
+            feedback: s.feedback || '',
+          }
+        }
+        setDrafts(initialDrafts)
       }
 
       setLoading(false)
@@ -60,6 +71,30 @@ export default function InstructorPage() {
     }
 
     window.open(data.signedUrl, '_blank')
+  }
+
+  async function handleSaveGrade(submissionId: string) {
+    setSavingId(submissionId)
+    const supabase = createClient()
+    const draft = drafts[submissionId]
+
+    const { error } = await supabase
+      .from('submissions')
+      .update({ grade: draft.grade, feedback: draft.feedback })
+      .eq('id', submissionId)
+
+    setSavingId(null)
+
+    if (error) {
+      alert('Could not save: ' + error.message)
+      return
+    }
+
+    setSubmissions((prev) =>
+      prev.map((s) =>
+        s.id === submissionId ? { ...s, grade: draft.grade, feedback: draft.feedback } : s
+      )
+    )
   }
 
   if (loading) {
@@ -93,38 +128,70 @@ export default function InstructorPage() {
       {submissions.length === 0 ? (
         <p className="text-gray-500">No submissions yet.</p>
       ) : (
-        <table className="w-full text-sm border-collapse">
-          <thead>
-            <tr className="border-b text-left text-gray-500">
-              <th className="py-2 pr-4">Student</th>
-              <th className="py-2 pr-4">Task</th>
-              <th className="py-2 pr-4">Submitted</th>
-              <th className="py-2 pr-4">Grade</th>
-              <th className="py-2 pr-4">File</th>
-            </tr>
-          </thead>
-          <tbody>
-            {submissions.map((s: any) => (
-              <tr key={s.id} className="border-b">
-                <td className="py-2 pr-4">{s.profiles?.full_name || 'Unnamed'}</td>
-                <td className="py-2 pr-4">{s.days?.title}</td>
-                <td className="py-2 pr-4">
-                  {new Date(s.submitted_at).toLocaleDateString()}
-                </td>
-                <td className="py-2 pr-4">{s.grade || '—'}</td>
-                <td className="py-2 pr-4">
-                  <button
-                    onClick={() => handleOpenFile(s.storage_path, s.id)}
-                    disabled={openingId === s.id}
-                    className="bg-black text-white rounded-lg px-3 py-1 text-xs font-semibold disabled:opacity-40"
-                  >
-                    {openingId === s.id ? 'Opening...' : 'Open file'}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="space-y-4">
+          {submissions.map((s: any) => (
+            <div key={s.id} className="border rounded-lg p-4">
+              <div className="flex items-start justify-between gap-4 mb-3">
+                <div>
+                  <h3 className="font-semibold">
+                    {s.profiles?.full_name || 'Unnamed'}
+                  </h3>
+                  <p className="text-sm text-gray-500">{s.days?.title}</p>
+                  <p className="text-xs text-gray-400">
+                    Submitted {new Date(s.submitted_at).toLocaleDateString()}
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleOpenFile(s.storage_path, s.id)}
+                  disabled={openingId === s.id}
+                  className="bg-black text-white rounded-lg px-3 py-1.5 text-xs font-semibold disabled:opacity-40 whitespace-nowrap"
+                >
+                  {openingId === s.id ? 'Opening...' : 'Open file'}
+                </button>
+              </div>
+
+              <div className="flex flex-wrap gap-3 items-end">
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Grade</label>
+                  <input
+                    type="text"
+                    value={drafts[s.id]?.grade || ''}
+                    onChange={(e) =>
+                      setDrafts((prev) => ({
+                        ...prev,
+                        [s.id]: { ...prev[s.id], grade: e.target.value },
+                      }))
+                    }
+                    placeholder="e.g. A or 9/10"
+                    className="border rounded-lg p-2 text-sm w-28"
+                  />
+                </div>
+                <div className="flex-1 min-w-[200px]">
+                  <label className="block text-xs text-gray-500 mb-1">Feedback</label>
+                  <input
+                    type="text"
+                    value={drafts[s.id]?.feedback || ''}
+                    onChange={(e) =>
+                      setDrafts((prev) => ({
+                        ...prev,
+                        [s.id]: { ...prev[s.id], feedback: e.target.value },
+                      }))
+                    }
+                    placeholder="Optional comment for the student"
+                    className="border rounded-lg p-2 text-sm w-full"
+                  />
+                </div>
+                <button
+                  onClick={() => handleSaveGrade(s.id)}
+                  disabled={savingId === s.id}
+                  className="border rounded-lg px-3 py-2 text-sm font-semibold hover:bg-gray-100 disabled:opacity-40"
+                >
+                  {savingId === s.id ? 'Saving...' : 'Save'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </main>
   )
