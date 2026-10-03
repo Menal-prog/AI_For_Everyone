@@ -11,6 +11,7 @@ export default function DashboardPage() {
   const [totalDays, setTotalDays] = useState(0)
   const [loading, setLoading] = useState(true)
   const [openingId, setOpeningId] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -59,6 +60,30 @@ export default function DashboardPage() {
     }
 
     window.open(data.signedUrl, '_blank')
+  }
+
+  async function handleDelete(submissionId: string) {
+    const confirmed = window.confirm(
+      'Delete this submission? You can upload a new file for this day afterward.'
+    )
+    if (!confirmed) return
+
+    setDeletingId(submissionId)
+    const supabase = createClient()
+
+    const { error } = await supabase
+      .from('submissions')
+      .delete()
+      .eq('id', submissionId)
+
+    setDeletingId(null)
+
+    if (error) {
+      alert('Could not delete: ' + error.message)
+      return
+    }
+
+    setSubmissions((prev) => prev.filter((s) => s.id !== submissionId))
   }
 
   async function handleSignOut() {
@@ -139,13 +164,22 @@ export default function DashboardPage() {
               {s.feedback && (
                 <p className="text-sm mt-1 text-slate">{s.feedback}</p>
               )}
-              <button
-                onClick={() => handleOpenFile(s.storage_path, s.id)}
-                disabled={openingId === s.id}
-                className="mt-3 text-sm bg-steel text-white rounded px-3 py-1.5 font-semibold hover:bg-ink transition-colors disabled:opacity-40"
-              >
-                {openingId === s.id ? 'Opening...' : 'Open file'}
-              </button>
+              <div className="flex gap-2 mt-3">
+                <button
+                  onClick={() => handleOpenFile(s.storage_path, s.id)}
+                  disabled={openingId === s.id}
+                  className="text-sm bg-steel text-white rounded px-3 py-1.5 font-semibold hover:bg-ink transition-colors disabled:opacity-40"
+                >
+                  {openingId === s.id ? 'Opening...' : 'Open file'}
+                </button>
+                <button
+                  onClick={() => handleDelete(s.id)}
+                  disabled={deletingId === s.id}
+                  className="text-sm border border-line rounded px-3 py-1.5 font-semibold hover:border-ochre hover:text-ochre transition-colors disabled:opacity-40"
+                >
+                  {deletingId === s.id ? 'Deleting...' : 'Delete'}
+                </button>
+              </div>
             </div>
           ))}
         </div>
