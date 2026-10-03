@@ -11,6 +11,7 @@ export default function InstructorPage() {
   const [loading, setLoading] = useState(true)
   const [openingId, setOpeningId] = useState<string | null>(null)
   const [savingId, setSavingId] = useState<string | null>(null)
+  const [savedId, setSavedId] = useState<string | null>(null)
   const [drafts, setDrafts] = useState<Record<string, { grade: string; feedback: string }>>({})
 
   useEffect(() => {
@@ -75,6 +76,7 @@ export default function InstructorPage() {
 
   async function handleSaveGrade(submissionId: string) {
     setSavingId(submissionId)
+    setSavedId(null)
     const supabase = createClient()
     const draft = drafts[submissionId]
 
@@ -95,6 +97,9 @@ export default function InstructorPage() {
         s.id === submissionId ? { ...s, grade: draft.grade, feedback: draft.feedback } : s
       )
     )
+
+    setSavedId(submissionId)
+    setTimeout(() => setSavedId(null), 3000)
   }
 
   if (loading) {
@@ -188,6 +193,9 @@ export default function InstructorPage() {
                 >
                   {savingId === s.id ? 'Saving...' : 'Save'}
                 </button>
+                {savedId === s.id && (
+                  <span className="text-xs text-steel">Saved.</span>
+                )}
               </div>
             </div>
           ))}

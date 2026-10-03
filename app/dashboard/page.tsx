@@ -8,6 +8,7 @@ import Link from 'next/link'
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null)
   const [submissions, setSubmissions] = useState<any[]>([])
+  const [totalDays, setTotalDays] = useState(0)
   const [loading, setLoading] = useState(true)
   const [openingId, setOpeningId] = useState<string | null>(null)
   const router = useRouter()
@@ -31,6 +32,12 @@ export default function DashboardPage() {
         .eq('student_id', userId)
         .order('submitted_at', { ascending: false })
       setSubmissions(data || [])
+
+      const { count } = await supabase
+        .from('days')
+        .select('*', { count: 'exact', head: true })
+      setTotalDays(count || 0)
+
       setLoading(false)
     }
   }, [])
@@ -74,6 +81,8 @@ export default function DashboardPage() {
     )
   }
 
+  const percent = totalDays > 0 ? Math.round((submissions.length / totalDays) * 100) : 0
+
   return (
     <main className="max-w-3xl mx-auto px-8 py-12">
       <div className="flex items-center justify-between mb-8">
@@ -89,7 +98,24 @@ export default function DashboardPage() {
       </div>
 
       <h1 className="font-display text-3xl font-bold mb-1">My submissions</h1>
-      <p className="text-slate mb-8">Signed in as {user.email}</p>
+      <p className="text-slate mb-6">Signed in as {user.email}</p>
+
+      {totalDays > 0 && (
+        <div className="mb-10">
+          <div className="flex justify-between text-sm text-slate mb-1">
+            <span>Progress</span>
+            <span>
+              {submissions.length} of {totalDays} days submitted
+            </span>
+          </div>
+          <div className="h-2 bg-line rounded-full overflow-hidden">
+            <div
+              className="h-full bg-ochre rounded-full transition-all"
+              style={{ width: `${percent}%` }}
+            />
+          </div>
+        </div>
+      )}
 
       {submissions.length === 0 ? (
         <p className="text-slate">
