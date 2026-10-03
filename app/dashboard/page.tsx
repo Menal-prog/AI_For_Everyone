@@ -35,7 +35,8 @@ export default function DashboardPage() {
 
       const { count } = await supabase
         .from('days')
-        .select('*', { count: 'exact', head: true })
+        .select('*, weeks!inner(number)', { count: 'exact', head: true })
+        .gt('weeks.number', 3)
       setTotalDays(count || 0)
 
       setLoading(false)
