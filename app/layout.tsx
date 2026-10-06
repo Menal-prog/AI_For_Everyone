@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Fraunces } from "next/font/google";
-import Link from "next/link";
+import NavBar from "./components/NavBar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,22 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">
-        <nav className="border-b border-line">
-          <div className="max-w-3xl mx-auto px-8 py-4 flex items-center gap-8 text-sm">
-            <Link href="/" className="font-display font-bold text-lg text-ink">
-              AI for Everyone
-            </Link>
-            <Link href="/dashboard" className="text-slate hover:text-steel">
-              My submissions
-            </Link>
-            <Link href="/instructor" className="text-slate hover:text-steel">
-              Instructor
-            </Link>
-            <Link href="/login" className="text-steel font-semibold ml-auto">
-              Sign in
-            </Link>
-          </div>
-        </nav>
+        <NavBar />
         {children}
       </body>
     </html>
