@@ -16,33 +16,80 @@ async function getWeeks() {
   return res.json()
 }
 
+const LAYER_X = [70, 230, 390, 550, 710]
+const LAYER_NODES = [3, 4, 5, 4, 2]
+const LAYER_Y_SPAN = 220
+const LAYER_Y_START = 30
+
+function nodeY(count: number, i: number) {
+  if (count === 1) return LAYER_Y_START + LAYER_Y_SPAN / 2
+  const gap = LAYER_Y_SPAN / (count - 1)
+  return LAYER_Y_START + gap * i
+}
+
 export default async function Home() {
   const weeks = await getWeeks()
 
+  const nodes: { x: number; y: number; layer: number }[] = []
+  LAYER_X.forEach((x, layer) => {
+    const count = LAYER_NODES[layer]
+    for (let i = 0; i < count; i++) {
+      nodes.push({ x, y: nodeY(count, i), layer })
+    }
+  })
+
+  const edges: { x1: number; y1: number; x2: number; y2: number }[] = []
+  for (let layer = 0; layer < LAYER_X.length - 1; layer++) {
+    const from = nodes.filter((n) => n.layer === layer)
+    const to = nodes.filter((n) => n.layer === layer + 1)
+    from.forEach((a) => {
+      to.forEach((b) => {
+        edges.push({ x1: a.x, y1: a.y, x2: b.x, y2: b.y })
+      })
+    })
+  }
+
   return (
     <main className="max-w-3xl mx-auto px-8 py-12">
-      <div className="flex items-center gap-8 mb-10">
+      <div className="relative border border-line rounded-lg overflow-hidden mb-12 bg-white">
         <svg
-          viewBox="0 0 160 160"
-          className="w-28 h-28 shrink-0"
+          viewBox="0 0 800 280"
+          className="w-full h-56 md:h-64"
+          preserveAspectRatio="xMidYMid slice"
           aria-hidden="true"
         >
-          <g stroke="var(--color-steel)" strokeWidth="1.5" fill="none">
-            <line x1="30" y1="40" x2="80" y2="20" />
-            <line x1="30" y1="40" x2="60" y2="90" />
-            <line x1="80" y1="20" x2="130" y2="55" />
-            <line x1="80" y1="20" x2="60" y2="90" />
-            <line x1="130" y1="55" x2="60" y2="90" />
-            <line x1="60" y1="90" x2="100" y2="130" />
-            <line x1="130" y1="55" x2="100" y2="130" />
+          <rect width="800" height="280" fill="var(--color-paper)" />
+
+          <g stroke="var(--color-line)" strokeWidth="1" opacity="0.6">
+            {edges.map((e, i) => (
+              <line key={i} x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} />
+            ))}
           </g>
-          <circle cx="30" cy="40" r="5" fill="var(--color-steel)" />
-          <circle cx="80" cy="20" r="5" fill="var(--color-steel)" />
-          <circle cx="130" cy="55" r="5" fill="var(--color-steel)" />
-          <circle cx="60" cy="90" r="7" fill="var(--color-ochre)" />
-          <circle cx="100" cy="130" r="5" fill="var(--color-steel)" />
+
+          {nodes.map((n, i) => {
+            const isOutput = n.layer === LAYER_X.length - 1
+            return (
+              <circle
+                key={i}
+                cx={n.x}
+                cy={n.y}
+                r={isOutput ? 7 : 5}
+                fill={isOutput ? 'var(--color-ochre)' : 'var(--color-paper)'}
+                stroke="var(--color-steel)"
+                strokeWidth="1.8"
+              />
+            )
+          })}
+
+          <text x="55" y="270" fontSize="11" fill="var(--color-slate)" fontFamily="var(--font-sans)">
+            Week 1
+          </text>
+          <text x="670" y="270" fontSize="11" fill="var(--color-ochre)" fontFamily="var(--font-sans)" fontWeight="600">
+            Week 12
+          </text>
         </svg>
-        <div>
+
+        <div className="p-8 border-t border-line">
           <h1 className="font-display text-4xl font-bold mb-2">AI for Everyone</h1>
           <p className="text-slate">
             A twelve-week course. Click a week to see materials and daily tasks.

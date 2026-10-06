@@ -55,7 +55,16 @@ export default async function WeekPage({ params }: { params: Promise<{ id: strin
       </p>
 
       <div className="border-l-2 border-line pl-5 py-1 mb-10">
-        <h3 className="font-display font-semibold mb-2">Materials</h3>
+        <h3 className="font-display font-semibold mb-2 flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-steel">
+            <circle cx="5" cy="6" r="2" />
+            <circle cx="5" cy="18" r="2" />
+            <circle cx="19" cy="12" r="2" />
+            <line x1="7" y1="6" x2="17" y2="11" />
+            <line x1="7" y1="18" x2="17" y2="13" />
+          </svg>
+          Materials
+        </h3>
         {materials.length === 0 && (
           <p className="text-sm text-slate">Not posted yet, check back after class.</p>
         )}

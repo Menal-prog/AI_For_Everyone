@@ -128,7 +128,13 @@ export default function InstructorPage() {
 
   return (
     <main className="max-w-4xl mx-auto px-8 py-12">
-      <h1 className="font-display text-3xl font-bold mb-8">All submissions</h1>
+      <h1 className="font-display text-3xl font-bold mb-8"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-steel inline-block mr-2 -mt-1">
+            <circle cx="5" cy="6" r="2" />
+            <circle cx="5" cy="18" r="2" />
+            <circle cx="19" cy="12" r="2" />
+            <line x1="7" y1="6" x2="17" y2="11" />
+            <line x1="7" y1="18" x2="17" y2="13" />
+          </svg>All submissions</h1>
 
       {submissions.length === 0 ? (
         <p className="text-slate">No submissions yet.</p>

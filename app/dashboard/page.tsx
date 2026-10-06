@@ -123,7 +123,13 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      <h1 className="font-display text-3xl font-bold mb-1">My submissions</h1>
+      <h1 className="font-display text-3xl font-bold mb-1"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-steel inline-block mr-2 -mt-1">
+            <circle cx="5" cy="6" r="2" />
+            <circle cx="5" cy="18" r="2" />
+            <circle cx="19" cy="12" r="2" />
+            <line x1="7" y1="6" x2="17" y2="11" />
+            <line x1="7" y1="18" x2="17" y2="13" />
+          </svg>My submissions</h1>
       <p className="text-slate mb-6">Signed in as {user.email}</p>
 
       {totalDays > 0 && (

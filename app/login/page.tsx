@@ -92,7 +92,13 @@ export default function LoginPage() {
 
   return (
     <main className="max-w-md mx-auto px-8 py-20">
-      <h1 className="font-display text-3xl font-bold mb-3">Sign in</h1>
+      <h1 className="font-display text-3xl font-bold mb-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-steel inline-block mr-2 -mt-1">
+            <circle cx="5" cy="6" r="2" />
+            <circle cx="5" cy="18" r="2" />
+            <circle cx="19" cy="12" r="2" />
+            <line x1="7" y1="6" x2="17" y2="11" />
+            <line x1="7" y1="18" x2="17" y2="13" />
+          </svg>Sign in</h1>
       <p className="text-slate mb-4">
         Enter your name and email and we'll send you an 8-digit code. No password needed.
       </p>
