@@ -22,7 +22,7 @@ export default async function Home() {
   return (
     <main className="max-w-5xl mx-auto px-6 md:px-8 py-10 md:py-12">
       <div
-        className="relative rounded-xl overflow-hidden mb-14 h-80 md:h-96 flex items-end bg-cover bg-center shadow-lg"
+        className="relative rounded-xl overflow-hidden mb-14 h-80 md:h-96 flex items-end bg-cover bg-[position:78%_center] md:bg-center shadow-lg"
         style={{ backgroundImage: "url('/hero-bg.jpg')" }}
       >
         <div
