@@ -35,28 +35,43 @@ export default function NavBar() {
   }
 
   return (
-    <nav className="border-b border-line">
-      <div className="max-w-3xl mx-auto px-8 py-4 flex items-center gap-8 text-sm">
-        <Link href="/" className="font-display font-bold text-lg text-ink">
+    <nav className="border-b border-line bg-paper/80 backdrop-blur">
+      <div className="max-w-5xl mx-auto px-6 md:px-8 py-3 md:py-4 flex flex-wrap items-center justify-between gap-y-2 text-sm">
+        <Link
+          href="/"
+          className="order-1 font-display font-bold text-lg text-ink whitespace-nowrap"
+        >
           AI for Everyone
         </Link>
-        <Link href="/dashboard" className="text-slate hover:text-steel">
-          My submissions
-        </Link>
-        <Link href="/instructor" className="text-slate hover:text-steel">
-          Instructor
-        </Link>
 
-        <div className="ml-auto">
+        <div className="order-3 w-full flex items-center gap-6 md:order-2 md:w-auto md:flex-1 md:ml-10">
+          <Link
+            href="/dashboard"
+            className="text-slate hover:text-steel whitespace-nowrap"
+          >
+            My submissions
+          </Link>
+          <Link
+            href="/instructor"
+            className="text-slate hover:text-steel whitespace-nowrap"
+          >
+            Instructor
+          </Link>
+        </div>
+
+        <div className="order-2 md:order-3">
           {!loading && !user && (
-            <Link href="/login" className="text-steel font-semibold">
+            <Link
+              href="/login"
+              className="text-steel font-semibold whitespace-nowrap rounded-full border border-steel px-4 py-1.5 hover:bg-steel hover:text-paper transition-colors"
+            >
               Sign in
             </Link>
           )}
           {!loading && user && (
             <button
               onClick={handleSignOut}
-              className="text-slate hover:text-steel font-semibold"
+              className="text-slate hover:text-steel font-semibold whitespace-nowrap rounded-full border border-line px-4 py-1.5 hover:border-steel transition-colors"
             >
               Sign out
             </button>
