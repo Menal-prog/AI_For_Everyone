@@ -23,24 +23,24 @@ export default async function Home() {
     <main className="w-full">
       {/* Full-width hero banner */}
       <section
-        className="relative w-full flex items-end bg-cover bg-[position:78%_center] md:bg-center min-h-[26rem] md:min-h-[36rem]"
+        className="relative w-full flex items-end bg-cover bg-[position:75%_center] md:bg-center min-h-[32rem] md:min-h-[36rem]"
         style={{ backgroundImage: "url('/hero-bg.jpg')" }}
       >
         <div
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(to top, rgba(27,36,48,0.92) 0%, rgba(27,36,48,0.55) 50%, rgba(27,36,48,0.15) 100%)',
+              'linear-gradient(to top, rgba(27,36,48,0.95) 0%, rgba(27,36,48,0.7) 45%, rgba(27,36,48,0.15) 100%)',
           }}
         />
-        <div className="relative w-full max-w-5xl mx-auto px-6 md:px-8 pb-10 md:pb-16 text-paper">
-          <span className="inline-block text-xs tracking-widest uppercase text-ochre font-semibold mb-3">
+        <div className="relative w-full max-w-5xl mx-auto px-6 md:px-8 pb-12 md:pb-16 text-paper">
+          <span className="inline-block text-sm md:text-xs tracking-widest uppercase text-ochre font-semibold mb-4">
             A Twelve-Week Course
           </span>
-          <h1 className="font-display text-4xl md:text-7xl font-bold mb-4">
+          <h1 className="font-display text-5xl md:text-7xl font-bold leading-[1.05] mb-5">
             AI for Everyone
           </h1>
-          <p className="text-paper/80 max-w-md text-lg">
+          <p className="text-paper/90 max-w-xl text-lg md:text-xl leading-relaxed">
             Click a week below to see its materials and daily tasks.
           </p>
         </div>

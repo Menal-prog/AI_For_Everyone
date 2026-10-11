@@ -35,25 +35,25 @@ export default function NavBar() {
   }
 
   return (
-    <nav className="border-b border-line bg-paper/80 backdrop-blur">
-      <div className="max-w-5xl mx-auto px-6 md:px-8 py-3 md:py-4 flex flex-wrap items-center justify-between gap-y-2 text-sm">
+    <nav className="border-b border-line bg-paper/90 backdrop-blur">
+      <div className="max-w-5xl mx-auto px-6 md:px-8 py-4 flex flex-wrap items-center justify-between gap-y-3 text-base">
         <Link
           href="/"
-          className="order-1 font-display font-bold text-lg text-ink whitespace-nowrap"
+          className="order-1 font-display font-bold text-xl md:text-lg text-ink whitespace-nowrap"
         >
           AI for Everyone
         </Link>
 
-        <div className="order-3 w-full flex items-center gap-6 md:order-2 md:w-auto md:flex-1 md:ml-10">
+        <div className="order-3 w-full flex items-center gap-8 md:order-2 md:w-auto md:flex-1 md:ml-10 md:gap-6 md:text-sm">
           <Link
             href="/dashboard"
-            className="text-slate hover:text-steel whitespace-nowrap"
+            className="text-slate hover:text-steel whitespace-nowrap py-1"
           >
             My submissions
           </Link>
           <Link
             href="/instructor"
-            className="text-slate hover:text-steel whitespace-nowrap"
+            className="text-slate hover:text-steel whitespace-nowrap py-1"
           >
             Instructor
           </Link>
@@ -63,7 +63,7 @@ export default function NavBar() {
           {!loading && !user && (
             <Link
               href="/login"
-              className="text-steel font-semibold whitespace-nowrap rounded-full border border-steel px-4 py-1.5 hover:bg-steel hover:text-paper transition-colors"
+              className="text-steel font-semibold whitespace-nowrap rounded-full border border-steel px-5 py-2 md:px-4 md:py-1.5 md:text-sm hover:bg-steel hover:text-paper transition-colors"
             >
               Sign in
             </Link>
@@ -71,7 +71,7 @@ export default function NavBar() {
           {!loading && user && (
             <button
               onClick={handleSignOut}
-              className="text-slate hover:text-steel font-semibold whitespace-nowrap rounded-full border border-line px-4 py-1.5 hover:border-steel transition-colors"
+              className="text-slate hover:text-steel font-semibold whitespace-nowrap rounded-full border border-line px-5 py-2 md:px-4 md:py-1.5 md:text-sm hover:border-steel transition-colors"
             >
               Sign out
             </button>
