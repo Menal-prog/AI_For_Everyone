@@ -23,10 +23,25 @@
 
 body {
   background-color: var(--paper);
-  background-image: radial-gradient(var(--line) 1px, transparent 1px);
-  background-size: 22px 22px;
+  background-image:
+    radial-gradient(ellipse 70% 45% at 0% 0%, rgba(44, 72, 112, 0.14), transparent 70%),
+    radial-gradient(ellipse 55% 40% at 100% 0%, rgba(185, 118, 47, 0.12), transparent 70%);
+  background-repeat: no-repeat;
   color: var(--ink);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Neural-network pattern behind the whole site */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cg stroke='%232c4870' stroke-opacity='0.16' stroke-width='1' fill='none'%3E%3Cpath d='M40 60L150 30L260 90L330 40M40 60L90 170L200 200L260 90M200 200L310 180L330 40M90 170L60 300L170 320L200 200M310 180L280 290L170 320'/%3E%3C/g%3E%3Cg fill='%232c4870' fill-opacity='0.28'%3E%3Ccircle cx='40' cy='60' r='3.5'/%3E%3Ccircle cx='150' cy='30' r='3.5'/%3E%3Ccircle cx='260' cy='90' r='3.5'/%3E%3Ccircle cx='90' cy='170' r='3.5'/%3E%3Ccircle cx='310' cy='180' r='3.5'/%3E%3Ccircle cx='60' cy='300' r='3.5'/%3E%3Ccircle cx='280' cy='290' r='3.5'/%3E%3C/g%3E%3Cg fill='%23b9762f' fill-opacity='0.4'%3E%3Ccircle cx='330' cy='40' r='4'/%3E%3Ccircle cx='200' cy='200' r='4'/%3E%3Ccircle cx='170' cy='320' r='4'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 360px 360px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 85%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 85%);
 }
 
 h1, h2, h3 {
